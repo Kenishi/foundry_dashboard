@@ -1,0 +1,28 @@
+# Move a folder up with, /dashboard, /api, and /nging_conf in the folder
+version: "3.7"
+services:
+  nginx:
+    image: nginx:latest
+    contianer_name: foundry_dashboard
+    restart: "unless-stopped"
+
+    volumes: 
+      - "./foundry_dashboard/build:/usr/share/nginx/html:ro"
+      - "./nginx_conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./nginx_conf/.htpasswds:/etc/nginx/.htpasswds:ro"
+    ports:
+      - "33000/tcp"
+    
+  foundry_dashboard_api:
+    image: kenishi86/foundry-dashboard-api:latest
+    container_name: foundry_dashboard_api
+    init: true
+    restart: "unless-stopped"
+
+    volumes: /var/run/docker.sock:/var/run/docker.sock
+
+    environment:
+      - LISTEN_PORT=45321
+    
+    ports:
+      - "127.0.0.1:45321"
