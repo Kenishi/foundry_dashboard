@@ -11,7 +11,7 @@ COPY ./public ./public
 
 RUN apt-get update
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y node
+RUN apt-get install -y nodejs
 RUN ["npm", "install"]
 RUN ["npx", "tsc"]
 RUN ["npm", "run", "build"]
