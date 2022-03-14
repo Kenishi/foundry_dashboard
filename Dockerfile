@@ -9,9 +9,9 @@ COPY ./*.json ./
 COPY ./src ./src
 COPY ./public ./public
 
-RUN apt-get install -y npm
+RUN apt-get update
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y node
 RUN ["npm", "install"]
 RUN ["npx", "tsc"]
-
-RUN mkdir -p /usr/share/nginx/html
-RUN cp ./build /usr/share/nginx/html
+RUN ["npm", "run", "build"]
