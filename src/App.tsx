@@ -46,16 +46,15 @@ function App() {
     const [limit, setLimit] = useState("2000");
     
     useEffect(() => {
-        const newSocket = io(FOUNDRY_API_URL, { autoConnect: false });
+        const newSocket = io("/", { path: FOUNDRY_API_SOCKET_URL_PATH, autoConnect: false });
         setSocket(newSocket);
-        console.log("new socket")
     }, [setSocket]);
 
     useEffect(() => {
         socket.io.removeAllListeners();
         socket.removeAllListeners();
         
-        socket.io.on("reconnect_attempt", (attempt) => {
+        socket.io.on("reconnect_attempt", (attempt: number) => {
             setStatus(`Reconnecting...(${attempt})`)
         });
         socket.io.on("reconnect_failed", () => {
@@ -75,11 +74,11 @@ function App() {
         });
         
         socket.on("refresh", (data: string) => {
-            setLogs((currentState) => [data, ...currentState]);
+            setLogs((currentState: any[]) => [data, ...currentState]);
         });
         socket.on("data", (data: string) => {
             // setLogs([...logs, data]);
-            setLogs((currentState) => [...currentState, data]);
+            setLogs((currentState: any[]) => [...currentState, data]);
         });
 
         return () => { socket.disconnect() }

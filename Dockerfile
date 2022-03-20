@@ -7,10 +7,11 @@ RUN mkdir src
 RUN mkdir public
 
 COPY ./*.json ./
+RUN ["npm", "install"]
+
 COPY ./src ./src
 COPY ./public ./public
 
-RUN ["npm", "install"]
 RUN ["npx", "tsc"]
 RUN ["npm", "run", "build"]
 
