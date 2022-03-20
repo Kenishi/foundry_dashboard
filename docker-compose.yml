@@ -20,9 +20,13 @@ services:
 
     volumes: 
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "$FOUNDRY_COMPOSE_FILE_PATH:/docker_compose.yml"
 
     environment:
       - LISTEN_PORT=45321
+      - FOUNDRY_COMPOSE_FILE_PATH=/docker_compose.yml
+      - FOUNDRY_CONTAINER_NAME=$FOUNDRY_CONTAINER_NAME
+      - CORS_HOSTNAME=$CORS_HOSTNAME
     
     ports:
-      - "127.0.0.1:45321:45321"
+     - "127.0.0.1:45321:45321"
