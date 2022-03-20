@@ -1,0 +1,1 @@
+export const FOUNDRY_API_URL = "/api";
