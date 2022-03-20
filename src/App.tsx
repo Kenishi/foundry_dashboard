@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { CssBaseline } from '@mui/material';
 import { io, Socket } from "socket.io-client";
-import { FOUNDRY_API_URL } from "./constants";
+import { FOUNDRY_API_URL, FOUNDRY_API_SOCKET_URL_PATH } from "./constants";
 
 
 interface TabPanelProps {
@@ -39,7 +39,7 @@ function App() {
   const [ value, setValue ] = useState(0);
   
     // Logs vars
-    const [socket, setSocket] = useState<Socket>(io(FOUNDRY_API_URL, { autoConnect: false }));
+    const [socket, setSocket] = useState<Socket>(io('/', { path: FOUNDRY_API_SOCKET_URL_PATH, autoConnect: false }));
     const [logs, setLogs] = useState<string[]>([]);
     const [isRunning, setIsRunning] = useState(false);
     const [status, setStatus] = useState("Disconnected");

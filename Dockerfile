@@ -1,4 +1,5 @@
-FROM nginx
+#### Builder
+FROM node:current-alpine AS builder
 
 WORKDIR /foundry-dashboard
 
@@ -9,9 +10,11 @@ COPY ./*.json ./
 COPY ./src ./src
 COPY ./public ./public
 
-RUN apt-get update
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
 RUN ["npm", "install"]
 RUN ["npx", "tsc"]
 RUN ["npm", "run", "build"]
+
+#### Runner
+FROM nginx
+
+COPY --from=builder /foundry-dashboard /foundry-dashboard
