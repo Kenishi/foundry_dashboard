@@ -1,5 +1,4 @@
 # Move a folder up with, /dashboard, /api, and /nging_conf in the folder
-# Move a folder up with, /dashboard, /api, and /nging_conf in the folder
 version: "3.7"
 services:
   foundry-dashboard:
@@ -24,7 +23,8 @@ services:
     volumes: 
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "$FOUNDRY_COMPOSE_FILE_PATH:/docker_compose.yml"
-
+      - "$FOUNDRY_CACHE:/foundry_cache"
+      
     environment:
       - LISTEN_PORT=45321
       - FOUNDRY_COMPOSE_FILE_PATH=$FOUNDRY_COMPOSE_FILE_PATH
