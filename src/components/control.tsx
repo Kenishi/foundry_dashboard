@@ -180,7 +180,7 @@ export const Control = () => {
                     </li>
                 </ul>
             </Paper>
-            <UpdateAlert updateFunction={handleUpdateServer} open={open} setOpen={setOpen}/>
+            <UpdateAlert version={selectedVersion} updateFunction={handleUpdateServer} open={open} setOpen={setOpen}/>
         </Paper>
     )
 };

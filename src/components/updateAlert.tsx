@@ -1,6 +1,7 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material"
 
 type UpdateAlertProps = {
+    version: string,
     updateFunction: () => void;
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -30,6 +31,8 @@ export const UpdateAlert = (props: UpdateAlertProps) => {
         </DialogTitle>
         <DialogContent>
             <DialogContentText id="alert-dialog-description">
+                Updating/Installing Version <Typography variant="h4"><b>{props.version}</b></Typography><br/>
+                <br/>
                 You are about to do an update/install on Foundry!<br/>
                 <br/>
                 Click "Update" to continue and start the update or Cancel to stop.
