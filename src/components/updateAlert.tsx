@@ -30,9 +30,7 @@ export const UpdateAlert = (props: UpdateAlertProps) => {
         </DialogTitle>
         <DialogContent>
             <DialogContentText id="alert-dialog-description">
-                You are about to do an update on Foundry!<br/>
-                <br/>
-                If you have not done so, verify the checklist on the main page.<br/>
+                You are about to do an update/install on Foundry!<br/>
                 <br/>
                 Click "Update" to continue and start the update or Cancel to stop.
             </DialogContentText>

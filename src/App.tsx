@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { CssBaseline } from '@mui/material';
 import { io, Socket } from "socket.io-client";
-import { FOUNDRY_API_URL, FOUNDRY_API_SOCKET_URL_PATH } from "./constants";
+import { FOUNDRY_API_SOCKET_URL_PATH } from "./constants";
 
 
 interface TabPanelProps {

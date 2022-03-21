@@ -1,5 +1,4 @@
-import { Button, CircularProgress, Grid, Paper, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box, Button, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import moment from "moment";
@@ -53,6 +52,17 @@ export const Control = () => {
 
     let [status, setStatus] = useState("unknown");
     let [uptime, setUptime] = useState("unknown");
+    let [currentVersion, setCurrentVersion] = useState("unknown");
+    let [availableZipInstalls, setAvailableZipInstalls] = useState<string[]>([]);
+    let [selectedVersion, setSelectedVersion] = useState<string>("");
+
+    const handleVersionChange = (event: SelectChangeEvent) => {
+        setSelectedVersion(event.target.value as string);
+    }
+
+    useEffect(() => {
+        setSelectedVersion(currentVersion);
+    }, [currentVersion]);
 
     const result = useQuery("status", fetchStatus);
     useEffect(() => {
@@ -62,6 +72,8 @@ export const Control = () => {
             if(data.statusCode === 200) {
                 setStatus(data.data.state);
                 setUptime(moment.duration(moment().diff(data.data.started)).humanize());
+                setCurrentVersion(data.data.currentVersion);
+                setAvailableZipInstalls(data.data.availableZipInstalls);
             }
             else if(data.statusCode === 404) {
                 setStatus("Unknown -- Not Found, try Restart");
@@ -84,18 +96,21 @@ export const Control = () => {
                 <Grid item xl={12} sx={{textAlign: "center"}}>Foundry Server</Grid>
                 <Grid container item xl={12}>
                     <Paper component={Grid} item container xl={12} sx={{ p: 2, ml: 2, mr:2 }} elevation={3}>
-                        <Box component={Grid} item container xl={9}>
+                        <Box component={Grid} item container xl={5}>
                             <Grid container item xl={12}>
-                                <Grid item xl={3}>Status:</Grid>
-                                <Grid item xl={8}>{status}</Grid>
+                                <Grid item xl={3.5}>Status:</Grid>
+                                <Grid item xl={8.5}>{status}</Grid>
                             </Grid>
                             <Grid container item xl={12}>
-                                <Grid item xl={3}>Uptime:</Grid>
-                                <Grid item xl={5}>{uptime}</Grid>
+                                <Grid item xl={3.5}>Uptime:</Grid>
+                                <Grid item xl={8.5}>{uptime}</Grid>
                             </Grid>
                         </Box>
+                        <Box component={Grid} item xl={2} sx={{ visibility: result.isFetching ? 'visible' : 'hidden' }}>
+                            <CircularProgress/>
+                        </Box>
                         <Box component={Grid} item xl={3}>
-                            <CircularProgress sx={{ visibility: result.isFetching ? 'visible' : 'hidden' }} />
+                            <Button variant="contained" sx={{m:1}} onClick={handleRestartServer}>Restart</Button>
                         </Box>
                     </Paper>
                 </Grid>
@@ -110,20 +125,60 @@ export const Control = () => {
                     </Paper>
                 </Grid>                
                 <Grid container item xl={12}>
-                    <Paper component={Grid} container item xl={12} sx={{p:2, ml:2, mr:2, mb:2}} elevation={3}>
-                        <Grid item xl={6}>
-                            <Button variant="contained" sx={{m:1}} onClick={handleRestartServer}>Restart</Button>
+                    <Paper component={Grid} container item xl={12} sx={{p:2, ml:2, mr:2 }} elevation={3}>
+                        <Grid container item xl={7}>
+                            <Grid container sx={{mb: 2}}>
+                                <Grid item xl={7}>
+                                    <Typography>Running Version:</Typography>
+                                </Grid>
+                                <Grid item xl={3}>
+                                    <b>{currentVersion}</b>
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                                <Grid item xl={7}  sx={{verticalAlign:"middle"}}>
+                                    <Typography id="updateVersionLabel">Update/Install Version:</Typography>
+                                </Grid>
+                                <Grid item xl={3}>
+                                    <FormControl>
+                                    <InputLabel id="updateVersionLabel">Version</InputLabel>
+                                    <Select
+                                        labelId="updateVersionLabel"
+                                        size="small"
+                                        value={selectedVersion}
+                                        label="Version"
+                                        onChange={handleVersionChange}
+                                    >
+                                        {availableZipInstalls.map((ver) => {
+                                            return (
+                                                <MenuItem key={ver} value={ver}>{ver}</MenuItem>
+                                            )
+                                        })}
+                                    </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                         </Grid>
-                        <Grid item xl={6}>
+                        <Grid item xl={5}>
                             <Button variant="contained" sx={{m:1}} onClick={handleShowUpdateAlert}>Update Server</Button>
                         </Grid>
                     </Paper>
                 </Grid>
             </Grid>
-            <Paper component={Grid} container item xl={12} sx={{ m:2, p:2 }} elevation={3}>
-                <Typography variant="h5" sx={{textAlign:"center"}}>Update Checklist</Typography>
-
-                
+            <Paper component={Grid} container item xl={12} sx={{ mx:2, my:1, p:2 }} elevation={3}>
+                <Typography variant="h5" sx={{textAlign:"center"}}>Update Notes</Typography>
+                <ul>
+                    <li>
+                        Select the version in the list to update or install (you can downgrade this way if need be), and hit "Update" 
+                    </li>
+                    <li>
+                        The server zip must have this <b>case-sensitive</b> filename format: <u>foundryvtt-#.###.zip</u>
+                    </li>
+                    <li>
+                        If the new version STILL isn't showing up after confirming the file format matches, it may because 
+                        the <a href="https://github.com/felddy/foundryvtt-docker">docker image</a> hasn't been updated for the new foundry version yet.
+                    </li>
+                </ul>
             </Paper>
             <UpdateAlert updateFunction={handleUpdateServer} open={open} setOpen={setOpen}/>
         </Paper>
