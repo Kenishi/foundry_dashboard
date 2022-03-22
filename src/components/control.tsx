@@ -38,7 +38,7 @@ export const Control = () => {
 
     const handleUpdateServer = () => {
         setStatus("updating...");
-        fetch(`${FOUNDRY_API_URL}/update`)
+        fetch(`${FOUNDRY_API_URL}/update?version=${selectedVersion}`)
             .then((result) => result.json())
             .then((result) => {
                 queryClient.invalidateQueries('status');
