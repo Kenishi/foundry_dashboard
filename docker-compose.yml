@@ -5,7 +5,12 @@ services:
     image: kenishi86/foundry-dashboard:latest
     container_name: foundry-dashboard
     restart: "unless-stopped"
-
+    logging:
+      driver: syslog
+      options:
+        syslog-format: "rfc5424micro"
+        syslog-address: "tcp://localhost:514"
+        tag: "foundry-dashboard"        
     volumes: 
       - "./nginx_conf/nginx.conf:/etc/nginx/nginx.conf:ro"
       - "./nginx_conf/.htpasswd:/etc/nginx/.htpasswd:ro"
@@ -24,12 +29,11 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "$FOUNDRY_COMPOSE_FILE_PATH:/docker_compose.yml"
       - "$FOUNDRY_CACHE:/foundry_cache"
-      
     environment:
       - LISTEN_PORT=45321
       - FOUNDRY_COMPOSE_FILE_PATH=$FOUNDRY_COMPOSE_FILE_PATH
       - FOUNDRY_CONTAINER_NAME=$FOUNDRY_CONTAINER_NAME
-      - CORS_HOSTNAME=$CORS_HOSTNAME
+      - CORS_HOSTNAMES=$CORS_HOSTNAMES
     
     expose:
      - "45321"
